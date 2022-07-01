@@ -18,6 +18,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect()
+
         const billCollection = client.db("power-hack").collection("billing-list")
 
 
@@ -27,6 +28,12 @@ async function run() {
             const items = await cursor.toArray()
             res.send(items)
         })
+
+        app.post('/add-billing', async (req, res) => {
+            const bill = req.body;
+            const result = await billCollection.insertOne(bill);
+            res.send({ success: true, result })
+        });
 
     }
     finally {
